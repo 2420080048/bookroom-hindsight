@@ -1,0 +1,459 @@
+{% extends "base.html" %}
+
+{% block title %}
+Orders | The Book Room Admin
+{% endblock %}
+
+
+{% block content %}
+
+<section class="admin-orders-page">
+
+
+    <!-- ================================
+         PAGE HEADER
+    ================================= -->
+
+    <div class="orders-top">
+
+        <div>
+
+            <span class="eyebrow">
+                THE BOOK ROOM ADMIN
+            </span>
+
+            <h1>
+                Customer Orders.
+            </h1>
+
+            <p>
+                Manage orders and keep your readers updated.
+            </p>
+
+        </div>
+
+
+        <div class="orders-top-buttons">
+
+            <a
+                href="{{ url_for('admin.dashboard') }}"
+                class="orders-back-button"
+            >
+                ← Inventory
+            </a>
+
+
+            <a
+                href="{{ url_for('admin.logout') }}"
+                class="orders-logout-button"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    {% if orders %}
+
+
+    <div class="orders-list">
+
+
+        {% for order in orders %}
+
+
+        <article class="order-admin-card">
+
+
+            <!-- ================================
+                 ORDER HEADER
+            ================================= -->
+
+            <div class="order-admin-header">
+
+                <div>
+
+                    <span class="order-small-label">
+                        ORDER
+                    </span>
+
+                    <h2>
+                        #BR{{ "%04d"|format(order.id) }}
+                    </h2>
+
+                </div>
+
+
+                <div class="order-header-right">
+
+                    <div
+                        class="
+                            current-order-status
+                            status-{{ order.status|lower }}
+                        "
+                    >
+                        {{ order.status }}
+                    </div>
+
+
+                    <div class="order-date">
+
+                        {% if order.created_at %}
+
+                        {{ order.created_at.strftime("%d %b %Y") }}
+
+                        <small>
+                            {{ order.created_at.strftime("%I:%M %p") }}
+                        </small>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================
+                 CUSTOMER INFORMATION
+            ================================= -->
+
+            <div class="order-customer-grid">
+
+
+                <div class="order-info-box">
+
+                    <span>
+                        CUSTOMER
+                    </span>
+
+                    <strong>
+                        {{ order.customer_name }}
+                    </strong>
+
+                    <p>
+                        📞 {{ order.phone }}
+                    </p>
+
+
+                    {% if order.email %}
+
+                    <p>
+                        ✉ {{ order.email }}
+                    </p>
+
+                    {% endif %}
+
+
+                    <a
+                        href="{{ url_for('admin.whatsapp_customer', order_id=order.id) }}"
+                        class="quick-whatsapp-link"
+                        target="_blank"
+                    >
+                        💬 Message Customer
+                    </a>
+
+                </div>
+
+
+
+                <div class="order-info-box">
+
+                    <span>
+                        DELIVERY ADDRESS
+                    </span>
+
+                    <strong>
+                        {{ order.city }}
+                    </strong>
+
+                    <p>
+                        {{ order.address }}
+                    </p>
+
+                    <p>
+                        {{ order.city }}
+                        -
+                        {{ order.pincode }}
+                    </p>
+
+                </div>
+
+
+
+                <div class="order-info-box payment-info-box">
+
+                    <span>
+                        PAYMENT
+                    </span>
+
+                    <strong>
+                        {{ order.payment_method }}
+                    </strong>
+
+                    <p class="order-total-highlight">
+                        ₹{{ order.total_amount }}
+                    </p>
+
+                    <small>
+                        Order Total
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================
+                 BOOKS ORDERED
+            ================================= -->
+
+            <div class="order-books-admin">
+
+                <div class="order-books-title">
+
+                    <span>
+                        BOOKS ORDERED
+                    </span>
+
+                    <small>
+                        {{ order.items|length }}
+                        item(s)
+                    </small>
+
+                </div>
+
+
+                {% for item in order.items %}
+
+                <div class="ordered-book-row">
+
+                    <div class="ordered-book-number">
+                        {{ "%02d"|format(loop.index) }}
+                    </div>
+
+
+                    <div class="ordered-book-info">
+
+                        <strong>
+                            {{ item.title }}
+                        </strong>
+
+                        <span>
+                            {{ item.author }}
+                        </span>
+
+                    </div>
+
+
+                    <strong class="ordered-book-price">
+                        ₹{{ item.price }}
+                    </strong>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+
+            <!-- ================================
+                 CUSTOMER NOTE
+            ================================= -->
+
+            {% if order.notes %}
+
+            <div class="order-notes">
+
+                <span>
+                    CUSTOMER NOTE
+                </span>
+
+                <p>
+                    {{ order.notes }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+
+            <!-- ================================
+                 STATUS MANAGEMENT
+            ================================= -->
+
+            <div class="order-management-box">
+
+                <div class="management-heading">
+
+                    <div>
+
+                        <span class="order-small-label">
+                            MANAGE ORDER
+                        </span>
+
+                        <h3>
+                            Update customer
+                        </h3>
+
+                    </div>
+
+
+                    <div class="management-phone">
+                        {{ order.phone }}
+                    </div>
+
+                </div>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'admin.update_order_status',
+                        order_id=order.id
+                    ) }}"
+                    class="status-form"
+                >
+
+                    <div class="status-select-area">
+
+                        <label>
+                            ORDER STATUS
+                        </label>
+
+
+                        <select name="status">
+
+                            {% for status in [
+                                "Placed",
+                                "Confirmed",
+                                "Packed",
+                                "Shipped",
+                                "Delivered",
+                                "Cancelled"
+                            ] %}
+
+                            <option
+                                value="{{ status }}"
+                                {% if order.status == status %}
+                                selected
+                                {% endif %}
+                            >
+                                {{ status }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="status-buttons">
+
+
+                        <!-- NORMAL UPDATE -->
+
+                        <button
+                            type="submit"
+                            class="normal-status-button"
+                        >
+                            Update Status
+                        </button>
+
+
+
+                        <!-- UPDATE + WHATSAPP -->
+
+                        <button
+                            type="submit"
+                            class="whatsapp-status-button"
+                            formaction="{{ url_for(
+                                'admin.update_order_status_whatsapp',
+                                order_id=order.id
+                            ) }}"
+                            formtarget="_blank"
+                        >
+
+                            <span class="whatsapp-icon">
+                                💬
+                            </span>
+
+                            Update + WhatsApp
+
+                        </button>
+
+
+                    </div>
+
+                </form>
+
+
+                <p class="whatsapp-help">
+
+                    Choosing
+                    <strong>
+                        Update + WhatsApp
+                    </strong>
+                    saves the new status and opens a ready-made
+                    WhatsApp message for the customer.
+
+                </p>
+
+            </div>
+
+
+        </article>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+
+    {% else %}
+
+
+    <!-- ================================
+         EMPTY ORDERS
+    ================================= -->
+
+    <div class="no-admin-orders">
+
+        <span>
+            📦
+        </span>
+
+        <h2>
+            No orders yet.
+        </h2>
+
+        <p>
+            Once someone places an order,
+            it will appear here automatically.
+        </p>
+
+        <a href="{{ url_for('main.home') }}">
+            View Bookstore →
+        </a>
+
+    </div>
+
+
+    {% endif %}
+
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section style="max-width:440px;margin:60px auto;padding:28px;
+                background:#fff;border-radius:20px;">
+    <h1>
+        {{ "Create your account" if registering else "Welcome back" }}
+    </h1>
+
+    <p>Find your next read with The Book Room.</p>
+
+    {% if error %}
+        <p role="alert" style="color:#9b2335;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        {% for field in form %}
+            {% if field.type not in ["CSRFTokenField", "SubmitField"] %}
+                <div style="margin:18px 0;">
+                    {{ field.label(style="display:block;margin-bottom:6px;") }}
+                    {{ field(style="width:100%;box-sizing:border-box;
+                                   padding:12px;border:1px solid #ccc;
+                                   border-radius:8px;") }}
+
+                    {% for message in field.errors %}
+                        <small style="display:block;color:#9b2335;">
+                            {{ message }}
+                        </small>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% for message in form.csrf_token.errors %}
+            <p role="alert">{{ message }} Refresh this page and try again.</p>
+        {% endfor %}
+
+        {{ form.submit(style="width:100%;padding:12px;background:#783249;
+                              color:white;border:0;border-radius:8px;
+                              cursor:pointer;") }}
+    </form>
+
+    <p style="margin-top:20px;">
+        {% if registering %}
+            Already registered?
+            <a href="{{ url_for('auth.login') }}">Log in</a>
+        {% else %}
+            New here?
+            <a href="{{ url_for('auth.register') }}">Create an account</a>
+        {% endif %}
+    </p>
+</section>
+{% endblock %}

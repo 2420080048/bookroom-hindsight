@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit {{ book.title }} | The Book Room
+{% endblock %}
+
+
+{% block content %}
+
+<section class="admin-form-page">
+
+    <div class="admin-form-card">
+
+        <div class="admin-form-heading">
+
+            <span class="eyebrow">
+                EDIT BOOK
+            </span>
+
+            <h1>
+                Update your book.
+            </h1>
+
+            <p>
+                Change the price, stock, condition or other book information.
+            </p>
+
+        </div>
+
+
+        <form method="POST" class="book-form">
+
+
+            <div class="form-group">
+
+                <label>Book Title</label>
+
+                <input
+                    type="text"
+                    name="title"
+                    value="{{ book.title }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Author</label>
+
+                <input
+                    type="text"
+                    name="author"
+                    value="{{ book.author }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>Selling Price</label>
+
+                    <select name="price" required>
+
+                        <option
+                            value="149"
+                            {% if book.price == 149 %}selected{% endif %}
+                        >
+                            ₹149
+                        </option>
+
+                        <option
+                            value="199"
+                            {% if book.price == 199 %}selected{% endif %}
+                        >
+                            ₹199
+                        </option>
+
+                        <option
+                            value="200"
+                            {% if book.price == 200 %}selected{% endif %}
+                        >
+                            ₹200
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Stock</label>
+
+                    <input
+                        type="number"
+                        name="stock"
+                        value="{{ book.stock }}"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>Genre</label>
+
+                    <select name="genre">
+
+                        {% for genre in
+                            ["Romance", "Thriller", "Fiction", "Fantasy", "Mystery"]
+                        %}
+
+                        <option
+                            value="{{ genre }}"
+                            {% if book.genre == genre %}selected{% endif %}
+                        >
+                            {{ genre }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Condition</label>
+
+                    <select name="condition">
+
+                        {% for condition in
+                            ["Like New", "Very Good", "Good"]
+                        %}
+
+                        <option
+                            value="{{ condition }}"
+                            {% if book.condition == condition %}selected{% endif %}
+                        >
+                            {{ condition }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Cover Image URL</label>
+
+                <input
+                    type="url"
+                    name="cover_url"
+                    value="{{ book.cover_url or '' }}"
+                    placeholder="Optional"
+                >
+
+            </div>
+
+
+            <div class="form-buttons">
+
+                <a
+                    href="{{ url_for('admin.dashboard') }}"
+                    class="cancel-button"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="save-book-button"
+                >
+                    Save Changes →
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

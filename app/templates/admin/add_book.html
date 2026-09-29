@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Book | The Book Room
+{% endblock %}
+
+
+{% block content %}
+
+<section class="admin-form-page">
+
+    <div class="admin-form-card">
+
+        <div class="admin-form-heading">
+
+            <span class="eyebrow">
+                NEW BOOK
+            </span>
+
+            <h1>
+                Add to your shelf.
+            </h1>
+
+            <p>
+                Enter the details and the book will automatically appear in your database.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="book-form"
+        >
+
+
+            <div class="form-group">
+
+                <label>
+                    Book Title
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="Example: It Starts With Us"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Author
+                </label>
+
+                <input
+                    type="text"
+                    name="author"
+                    placeholder="Example: Colleen Hoover"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Selling Price
+                    </label>
+
+                    <select
+                        name="price"
+                        required
+                    >
+
+                        <option value="149">
+                            ₹149
+                        </option>
+
+                        <option value="199">
+                            ₹199
+                        </option>
+
+                        <option value="200">
+                            ₹200
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Stock
+                    </label>
+
+                    <input
+                        type="number"
+                        name="stock"
+                        value="1"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Genre
+                    </label>
+
+                    <select
+                        name="genre"
+                        required
+                    >
+
+                        <option value="Romance">
+                            Romance
+                        </option>
+
+                        <option value="Thriller">
+                            Thriller
+                        </option>
+
+                        <option value="Fiction">
+                            Fiction
+                        </option>
+
+                        <option value="Fantasy">
+                            Fantasy
+                        </option>
+
+                        <option value="Mystery">
+                            Mystery
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Condition
+                    </label>
+
+                    <select name="condition">
+
+                        <option value="Like New">
+                            Like New
+                        </option>
+
+                        <option
+                            value="Very Good"
+                            selected
+                        >
+                            Very Good
+                        </option>
+
+                        <option value="Good">
+                            Good
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Cover Image URL
+                </label>
+
+                <input
+                    type="url"
+                    name="cover_url"
+                    placeholder="Optional for now"
+                >
+
+                <small>
+                    You can leave this empty. We'll improve cover uploads later.
+                </small>
+
+            </div>
+
+
+            <div class="form-buttons">
+
+                <a
+                    href="{{ url_for('admin.dashboard') }}"
+                    class="cancel-button"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="save-book-button"
+                >
+                    Add Book →
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

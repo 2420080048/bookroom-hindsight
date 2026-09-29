@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+
+{% block title %}
+Checkout | The Book Room
+{% endblock %}
+
+
+{% block content %}
+
+<section class="checkout-page">
+
+    <div class="checkout-heading">
+
+        <span class="eyebrow">
+            ALMOST YOURS ✦
+        </span>
+
+        <h1>
+            Checkout.
+        </h1>
+
+        <p>
+            One last step before these stories find their new home.
+        </p>
+
+    </div>
+
+
+    <div class="checkout-layout">
+
+
+        <!-- CUSTOMER FORM -->
+
+        <div class="checkout-form-card">
+
+            <div class="checkout-card-heading">
+
+                <span>
+                    01
+                </span>
+
+                <div>
+
+                    <h2>
+                        Delivery details
+                    </h2>
+
+                    <p>
+                        Tell us where your books should go.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if error %}
+
+            <div class="checkout-error">
+
+                {{ error }}
+
+            </div>
+
+            {% endif %}
+
+
+            <form
+                method="POST"
+                id="checkoutForm"
+            >
+
+                <input
+                    type="hidden"
+                    name="cart_data"
+                    id="cartData"
+                >
+
+
+                <div class="form-group">
+
+                    <label>
+                        Full Name *
+                    </label>
+
+                    <input
+                        type="text"
+                        name="customer_name"
+                        placeholder="Your name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Phone Number *
+                        </label>
+
+                        <input
+                            type="tel"
+                            name="phone"
+                            placeholder="10-digit mobile number"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Optional"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Address *
+                    </label>
+
+                    <textarea
+                        name="address"
+                        placeholder="House / Flat, Street, Area"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            City *
+                        </label>
+
+                        <input
+                            type="text"
+                            name="city"
+                            placeholder="City"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Pincode *
+                        </label>
+
+                        <input
+                            type="text"
+                            name="pincode"
+                            placeholder="500000"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Payment Preference
+                    </label>
+
+                    <select name="payment_method">
+
+                        <option value="Cash on Delivery">
+                            Cash on Delivery
+                        </option>
+
+                        <option value="UPI / Contact Seller">
+                            UPI / Contact Seller
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Order Notes
+                    </label>
+
+                    <textarea
+                        name="notes"
+                        placeholder="Any special instructions? Optional."
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="place-order-button"
+                    id="placeOrderButton"
+                >
+
+                    Place Order →
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ORDER SUMMARY -->
+
+        <aside class="checkout-summary">
+
+            <span class="eyebrow">
+                YOUR BOOK HAUL
+            </span>
+
+            <h2>
+                Order Summary
+            </h2>
+
+
+            <div
+                id="checkoutItems"
+                class="checkout-items"
+            ></div>
+
+
+            <div
+                id="checkoutEmpty"
+                class="checkout-empty"
+            >
+
+                <span>
+                    📚
+                </span>
+
+                <h3>
+                    Your bag is empty.
+                </h3>
+
+                <a href="/">
+                    Go back to books →
+                </a>
+
+            </div>
+
+
+            <div
+                class="checkout-total-box"
+                id="checkoutTotalBox"
+            >
+
+                <div>
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <strong id="checkoutSubtotal">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <div class="checkout-divider"></div>
+
+
+                <div class="checkout-grand-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong id="checkoutTotal">
+                        ₹0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="checkout-trust">
+
+                <div>
+                    ♡ Pre-loved books
+                </div>
+
+                <div>
+                    ✦ Student-friendly prices
+                </div>
+
+                <div>
+                    📚 Carefully curated shelf
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</section>
+
+
+<script>
+
+const checkoutCart =
+    JSON.parse(
+        localStorage.getItem("cart") || "[]"
+    );
+
+
+const checkoutItems =
+    document.getElementById("checkoutItems");
+
+
+const checkoutEmpty =
+    document.getElementById("checkoutEmpty");
+
+
+const checkoutTotalBox =
+    document.getElementById("checkoutTotalBox");
+
+
+const checkoutSubtotal =
+    document.getElementById("checkoutSubtotal");
+
+
+const checkoutTotal =
+    document.getElementById("checkoutTotal");
+
+
+const cartData =
+    document.getElementById("cartData");
+
+
+const placeOrderButton =
+    document.getElementById("placeOrderButton");
+
+
+cartData.value =
+    JSON.stringify(checkoutCart);
+
+
+if (checkoutCart.length === 0) {
+
+    checkoutEmpty.style.display = "block";
+
+    checkoutTotalBox.style.display = "none";
+
+    placeOrderButton.disabled = true;
+
+    placeOrderButton.innerText =
+        "Your bag is empty";
+
+} else {
+
+    checkoutEmpty.style.display = "none";
+
+
+    checkoutItems.innerHTML =
+        checkoutCart.map(
+            item => `
+
+                <div class="checkout-item">
+
+                    <div class="checkout-mini-cover">
+
+                        ${item.title
+                            .split(" ")
+                            .slice(0, 3)
+                            .join(" ")}
+
+                    </div>
+
+
+                    <div class="checkout-item-info">
+
+                        <h3>
+                            ${item.title}
+                        </h3>
+
+                        <p>
+                            ${item.author}
+                        </p>
+
+                    </div>
+
+
+                    <strong>
+                        ₹${item.price}
+                    </strong>
+
+                </div>
+
+            `
+        ).join("");
+
+
+    const total =
+        checkoutCart.reduce(
+            (sum, item) =>
+                sum + Number(item.price),
+            0
+        );
+
+
+    checkoutSubtotal.innerText =
+        `₹${total}`;
+
+    checkoutTotal.innerText =
+        `₹${total}`;
+
+}
+
+</script>
+
+{% endblock %}

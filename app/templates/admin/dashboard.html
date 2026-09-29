@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard | The Book Room
+{% endblock %}
+
+
+{% block content %}
+
+<section class="admin-page">
+
+    <div class="admin-heading">
+
+        <div>
+
+            <span class="eyebrow">
+    THE BOOK ROOM ADMIN
+</span>
+
+<h1>
+    Your bookstore dashboard.
+</h1>
+
+<p>
+    Manage books, stock and customer orders from one place.
+</p>
+
+<a href="{{ url_for('admin_requests.dashboard') }}"
+   style="display:inline-block;margin:12px 0;padding:12px 20px;
+          background:#783249;color:white;text-decoration:none;
+          border-radius:10px;font-weight:600;">
+    Customer Book Requests
+</a>
+
+</div>
+
+
+        <div class="admin-header-buttons">
+
+
+            <a
+                href="{{ url_for('admin.orders') }}"
+                class="admin-orders-button"
+            >
+
+                Orders
+
+                {% if placed_orders > 0 %}
+
+                <span>
+                    {{ placed_orders }}
+                </span>
+
+                {% endif %}
+
+            </a>
+
+
+            <a
+                href="{{ url_for('admin.add_book') }}"
+                class="admin-add-button"
+            >
+                + Add New Book
+            </a>
+
+
+            <a
+                href="{{ url_for('admin.logout') }}"
+                class="admin-logout-button"
+            >
+                Logout
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="admin-stats admin-stats-four">
+
+
+        <div class="admin-stat-card">
+
+            <span>
+                TOTAL TITLES
+            </span>
+
+            <strong>
+                {{ total_books }}
+            </strong>
+
+            <p>
+                Books currently listed
+            </p>
+
+        </div>
+
+
+        <div class="admin-stat-card">
+
+            <span>
+                TOTAL STOCK
+            </span>
+
+            <strong>
+                {{ total_stock }}
+            </strong>
+
+            <p>
+                Physical books available
+            </p>
+
+        </div>
+
+
+        <div class="admin-stat-card orders-stat-card">
+
+            <span>
+                TOTAL ORDERS
+            </span>
+
+            <strong>
+                {{ total_orders }}
+            </strong>
+
+            <p>
+                Customer orders received
+            </p>
+
+        </div>
+
+
+        <div class="admin-stat-card new-orders-stat">
+
+            <span>
+                NEW ORDERS
+            </span>
+
+            <strong>
+                {{ placed_orders }}
+            </strong>
+
+            <p>
+                Waiting for confirmation
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- INVENTORY -->
+
+    <div class="admin-books-box">
+
+        <div class="admin-books-heading">
+
+            <div>
+
+                <span class="eyebrow">
+                    INVENTORY
+                </span>
+
+                <h2>
+                    All Books
+                </h2>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('admin.orders') }}"
+                class="view-orders-link"
+            >
+                View Customer Orders →
+            </a>
+
+        </div>
+
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Book</th>
+
+                        <th>Author</th>
+
+                        <th>Genre</th>
+
+                        <th>Price</th>
+
+                        <th>Stock</th>
+
+                        <th>Condition</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for book in books %}
+
+                    <tr>
+
+
+                        <td>
+                            #{{ book.id }}
+                        </td>
+
+
+                        <td class="admin-book-title">
+
+                            {{ book.title }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ book.author }}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="admin-genre">
+
+                                {{ book.genre }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td class="admin-price">
+
+                            ₹{{ book.price }}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if book.stock > 0 %}
+
+                            {{ book.stock }}
+
+                            {% else %}
+
+                            <span class="admin-out-stock">
+
+                                Out of Stock
+
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ book.condition }}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="admin-actions">
+
+                                <a
+                                    href="{{ url_for('admin.edit_book', book_id=book.id) }}"
+                                    class="edit-book-button"
+                                >
+                                    Edit
+                                </a>
+
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('admin.delete_book', book_id=book.id) }}"
+                                    onsubmit="return confirm('Are you sure you want to delete {{ book.title }}?');"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="delete-book-button"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

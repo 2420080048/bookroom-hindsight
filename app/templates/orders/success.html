@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}
+Order Confirmed | The Book Room
+{% endblock %}
+
+
+{% block content %}
+
+<section class="success-page">
+
+    <div class="success-card">
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+
+        <span class="eyebrow">
+            ORDER CONFIRMED
+        </span>
+
+
+        <h1>
+            Your next stories
+            are officially yours.
+        </h1>
+
+
+        <p class="success-message">
+
+            Thank you, {{ order.customer_name }}.
+            Your order has been placed successfully.
+
+        </p>
+
+
+        <div class="order-number">
+
+            <span>
+                ORDER NUMBER
+            </span>
+
+            <strong>
+                #BR{{ "%04d"|format(order.id) }}
+            </strong>
+
+        </div>
+
+
+        <div class="success-details">
+
+            <div>
+
+                <span>
+                    Total
+                </span>
+
+                <strong>
+                    ₹{{ order.total_amount }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Payment
+                </span>
+
+                <strong>
+                    {{ order.payment_method }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Status
+                </span>
+
+                <strong>
+                    {{ order.status }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="success-books">
+
+            <h2>
+                Your books
+            </h2>
+
+
+            {% for item in order.items %}
+
+            <div class="success-book-row">
+
+                <div>
+
+                    <strong>
+                        {{ item.title }}
+                    </strong>
+
+                    <span>
+                        {{ item.author }}
+                    </span>
+
+                </div>
+
+
+                <strong>
+                    ₹{{ item.price }}
+                </strong>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <a
+            href="/"
+            class="continue-shopping-button"
+        >
+            Continue Browsing →
+        </a>
+
+    </div>
+
+</section>
+
+
+<script>
+
+localStorage.removeItem("cart");
+
+const headerCartCount =
+    document.getElementById("cartCount");
+
+if (headerCartCount) {
+    headerCartCount.innerText = "0";
+}
+
+</script>
+
+{% endblock %}

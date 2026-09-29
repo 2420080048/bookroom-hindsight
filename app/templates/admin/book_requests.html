@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section style="max-width:1100px;margin:40px auto;padding:24px;">
+
+    <h1>Customer book requests</h1>
+    <p>Check stock and prepare customer messages for review.</p>
+
+    {% for item in requests %}
+        <article style="background:white;padding:24px;margin:18px 0;
+                        border:1px solid #eadbd5;border-radius:16px;">
+
+            <div style="display:flex;justify-content:space-between;
+                        gap:12px;flex-wrap:wrap;">
+                <strong>
+                    {{ item.customer.name if item.customer else "Customer" }}
+                </strong>
+                <span style="color:#783249;">
+                    {{ item.status | capitalize }}
+                </span>
+            </div>
+
+            <p style="font-size:18px;line-height:1.6;">
+                {{ item.request_text }}
+            </p>
+
+            <small style="color:#666;">
+                Request #{{ item.id }}
+                · {{ item.created_at.strftime("%d %b %Y") }}
+                · Hindsight:
+                {{ "Synced" if item.memory_synced else "Not synced yet" }}
+            </small>
+
+            <form method="POST"
+                  action="{{ url_for('admin_requests.check_stock',
+                                     request_id=item.id) }}"
+                  class="request-action-form"
+                  style="margin-top:18px;">
+
+                {{ form.hidden_tag() }}
+
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    {{ form.submit(
+                        style="padding:12px 18px;background:#783249;
+                               color:white;border:0;border-radius:10px;
+                               cursor:pointer;"
+                    ) }}
+
+                    {{ form.draft(
+                        style="padding:12px 18px;background:#28201d;
+                               color:white;border:0;border-radius:10px;
+                               cursor:pointer;"
+                    ) }}
+                </div>
+
+                <p class="working-message" role="status" hidden>
+                    Working on your request… Please wait.
+                </p>
+            </form>
+
+            {% if selected_id == item.id %}
+                {% if error %}
+                    <p role="alert" style="color:#9b2335;">{{ error }}</p>
+                {% endif %}
+
+                {% if result %}
+                    <div style="margin-top:18px;padding:18px;
+                                background:#f8f0ed;border-radius:12px;">
+                        <h3>Stock assessment</h3>
+                        <p style="white-space:pre-wrap;line-height:1.7;">{{ result }}</p>
+                    </div>
+                {% endif %}
+
+                {% if draft %}
+                    <div style="margin-top:18px;padding:18px;
+                                background:#f8f0ed;border-radius:12px;">
+                        <h3>Customer message draft</h3>
+
+                        <textarea
+                            aria-label="Editable customer message draft"
+                            rows="6"
+                            style="width:100%;box-sizing:border-box;
+                                   padding:14px;border:1px solid #ccc;
+                                   border-radius:8px;font:inherit;"
+                        >{{ draft }}</textarea>
+
+                        <p>
+                            Review the title, price, and condition before
+                            using this draft. No message has been sent.
+                            Edits here are not saved automatically.
+                        </p>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </article>
+    {% else %}
+        <p>No customer requests yet.</p>
+    {% endfor %}
+
+</section>
+
+<script>
+    let working = false;
+
+    document.querySelectorAll(".request-action-form").forEach(function (form) {
+        form.addEventListener("submit", function (event) {
+            if (working) {
+                event.preventDefault();
+                return;
+            }
+
+            working = true;
+            form.querySelector(".working-message").hidden = false;
+        });
+    });
+</script>
+{% endblock %}

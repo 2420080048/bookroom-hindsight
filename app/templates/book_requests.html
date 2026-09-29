@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section style="max-width:700px;margin:50px auto;padding:28px;
+                background:white;border-radius:20px;">
+    <h1>Your book requests</h1>
+
+    <p>
+        Tell us what you are looking for, including your budget
+        and any condition requirements. The shop owner can view
+        this request to help find a suitable copy.
+    </p>
+
+    {% for message in get_flashed_messages() %}
+        <p role="status" style="padding:12px;background:#f8f0ed;">
+            {{ message }}
+        </p>
+    {% endfor %}
+
+    <form method="POST" id="request-form">
+        {{ form.hidden_tag() }}
+
+        {{ form.request_text.label }}
+
+        {{ form.request_text(
+            placeholder="I want November 9 by Colleen Hoover under ₹150.",
+            style="display:block;width:100%;box-sizing:border-box;
+                   padding:14px;margin:12px 0;border:1px solid #ccc;
+                   border-radius:8px;"
+        ) }}
+
+        {% for errors in form.errors.values() %}
+            {% for error in errors %}
+                <p role="alert" style="color:#9b2335;">{{ error }}</p>
+            {% endfor %}
+        {% endfor %}
+
+        {{ form.submit(style="padding:12px;background:#783249;
+                              color:white;border:0;border-radius:8px;
+                              cursor:pointer;") }}
+
+        <p id="request-loading" role="status" hidden>
+            Saving your request and updating memory… Please wait.
+        </p>
+    </form>
+
+    <h2 style="margin-top:30px;">Your saved requests</h2>
+
+    {% for item in requests %}
+        <article style="padding:16px;margin:12px 0;
+                        background:#f8f0ed;border-radius:10px;">
+            <p>{{ item.request_text }}</p>
+            <small>
+                Status: {{ item.status }}
+                · Memory:
+                {{ "Synced" if item.memory_synced else "Not synced yet" }}
+            </small>
+        </article>
+    {% else %}
+        <p>You have not submitted any book requests yet.</p>
+    {% endfor %}
+</section>
+
+<script>
+    let savingRequest = false;
+
+    document.getElementById("request-form").addEventListener(
+        "submit", function (event) {
+            if (savingRequest) {
+                event.preventDefault();
+                return;
+            }
+
+            savingRequest = true;
+            document.getElementById("request-loading").hidden = false;
+        }
+    );
+</script>
+{% endblock %}

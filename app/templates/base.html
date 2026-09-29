@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}The Book Room{% endblock %}
+    </title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+    <div class="announcement">
+        📚 PRE-LOVED STORIES
+        <span>•</span>
+        BOOKS FROM ₹149
+        <span>•</span>
+        COMPLETE SERIES ₹799
+        <span>•</span>
+        STUDENT FRIENDLY PRICES
+    </div>
+
+    <header class="navbar">
+
+        <a href="{{ url_for('main.home') }}" class="brand">
+            <span class="brand-main">
+                THE BOOK ROOM
+            </span>
+
+            <span class="brand-small">
+                STORIES DESERVE ANOTHER READER
+            </span>
+        </a>
+
+        <nav class="desktop-nav">
+            <a href="{{ url_for('main.home') }}#home">
+                Home
+            </a>
+
+            <a href="{{ url_for('main.home') }}#books">
+                Books
+            </a>
+
+            <a href="{{ url_for('main.home') }}#series">
+                Series
+            </a>
+
+            <a href="{{ url_for('main.home') }}#why">
+                Our Story
+            </a>
+        </nav>
+
+        <div class="nav-actions">
+
+            <button
+                type="button"
+                class="circle-button"
+                id="wishlistButton"
+                title="Wishlist"
+            >
+                ♡
+            </button>
+
+            <button
+                type="button"
+                class="cart-nav"
+                id="openCart"
+            >
+                Bag
+                <span id="cartCount">0</span>
+            </button>
+
+        </div>
+    </header>
+
+    <main>
+
+        <div style="display:flex;justify-content:flex-end;gap:16px;
+                    flex-wrap:wrap;padding:12px 6%;background:#f8f0ed;">
+
+            {% if session.get("customer_id") %}
+
+                <a href="{{ url_for('assistant.memory_page') }}"
+                   style="color:#783249;font-weight:600;">
+                    My Book Assistant
+                </a>
+
+                <a href="{{ url_for('book_requests.request_page') }}"
+                   style="color:#783249;font-weight:600;">
+                    My Book Requests
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('auth.login') }}"
+                   style="color:#783249;">
+                    Log in
+                </a>
+
+                <a href="{{ url_for('auth.register') }}"
+                   style="color:#783249;">
+                    Create account
+                </a>
+
+            {% endif %}
+
+        </div>
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+    <footer>
+
+        <div class="footer-brand">
+            THE BOOK ROOM
+            <small>pre-loved stories</small>
+        </div>
+
+        <p>
+            Good books deserve more than one reader.
+        </p>
+
+        <p class="footer-small">
+            Made for readers who want more books and less guilt about the price.
+        </p>
+
+        <p class="copyright">
+            © 2026 The Book Room
+        </p>
+
+    </footer>
+
+    <div
+        class="drawer-overlay"
+        id="drawerOverlay"
+    ></div>
+
+    <aside
+        class="cart-drawer"
+        id="cartDrawer"
+    >
+
+        <div class="drawer-header">
+
+            <div>
+                <span class="eyebrow">
+                    YOUR BAG
+                </span>
+
+                <h2>
+                    Book haul
+                </h2>
+            </div>
+
+            <button
+                type="button"
+                class="close-drawer"
+                id="closeCart"
+                aria-label="Close bag"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div
+            class="cart-items"
+            id="cartItems"
+        ></div>
+
+        <div
+            class="empty-cart"
+            id="emptyCart"
+        >
+            <div class="empty-icon">
+                📚
+            </div>
+
+            <h3>
+                Your bag is feeling lonely.
+            </h3>
+
+            <p>
+                Add a story or two.
+            </p>
+        </div>
+
+        <div class="drawer-bottom">
+
+            <div class="subtotal">
+                <span>Subtotal</span>
+                <strong id="cartTotal">₹0</strong>
+            </div>
+
+            <button type="button" class="checkout-button">
+                Continue to Checkout →
+            </button>
+
+            <small>
+                Checkout will be connected in the next step.
+            </small>
+
+        </div>
+
+    </aside>
+
+    <div
+        class="toast"
+        id="toast"
+    >
+        Added to your bag ♡
+    </div>
+
+    <script
+        src="{{ url_for('static', filename='js/main.js') }}"
+    ></script>
+
+</body>
+</html>

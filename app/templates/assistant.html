@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section style="max-width:700px;margin:50px auto;padding:28px;
+                background:white;border-radius:20px;">
+
+    <h1>Your personal bookseller</h1>
+    <p>
+        Save your reading preferences, then discover available books
+        using what Hindsight remembers about you.
+    </p>
+
+    <form method="POST" id="assistant-form">
+        {{ form.hidden_tag() }}
+
+        {{ form.preference.label }}
+
+        {{ form.preference(
+            placeholder="I want Colleen Hoover books priced under ₹150.",
+            style="display:block;width:100%;box-sizing:border-box;
+                   padding:14px;margin:12px 0;border:1px solid #ccc;
+                   border-radius:8px;"
+        ) }}
+
+        {% for errors in form.errors.values() %}
+            {% for error in errors %}
+                <p role="alert" style="color:#9b2335;">{{ error }}</p>
+            {% endfor %}
+        {% endfor %}
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            {{ form.save(style="padding:12px;background:#783249;
+                               color:white;border:0;border-radius:8px;
+                               cursor:pointer;") }}
+
+            {{ form.recall(style="padding:12px;border:1px solid #783249;
+                                 border-radius:8px;cursor:pointer;") }}
+
+            {{ form.recommend(style="padding:12px;background:#28201d;
+                                    color:white;border:0;border-radius:8px;
+                                    cursor:pointer;") }}
+        </div>
+
+        <p style="font-size:14px;color:#666;">
+            Save any new preferences before requesting recommendations.
+        </p>
+
+        <p id="loading-message" role="status" hidden>
+            Working on your request… This may take a little time.
+            Please do not click again.
+        </p>
+    </form>
+
+    {% if message %}
+        <p role="status">{{ message }}</p>
+    {% endif %}
+
+    {% if memories %}
+        <h2>What I remember</h2>
+        {% for memory in memories %}
+            <p>{{ memory }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if recommendations %}
+        <div style="margin-top:24px;padding:20px;background:#f8f0ed;
+                    border-radius:12px;">
+            <h2>Suggestions for you</h2>
+            <div style="white-space:pre-wrap;line-height:1.7;">{{ recommendations }}</div>
+        </div>
+    {% endif %}
+</section>
+
+<script>
+    const assistantForm = document.getElementById("assistant-form");
+    let submitting = false;
+
+    assistantForm.addEventListener("submit", function (event) {
+        if (submitting) {
+            event.preventDefault();
+            return;
+        }
+
+        submitting = true;
+        assistantForm.setAttribute("aria-busy", "true");
+        document.getElementById("loading-message").hidden = false;
+    });
+</script>
+{% endblock %}
