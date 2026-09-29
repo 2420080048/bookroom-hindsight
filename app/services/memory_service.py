@@ -1,4 +1,4 @@
-return f"bookroom-live-v1-customer-{int(customer_id)}"import os
+import os
 
 from hindsight_client import Hindsight
 
@@ -40,9 +40,9 @@ def recall_customer_memory(customer_id, query):
                 "Combine repeated facts, even when worded differently. "
                 "State each distinct preference only once. "
                 "Write one short paragraph in plain text. "
-"Do not use Markdown, asterisks, headings, or bullet points. "
-"Only include preferences the customer actually stated. "
-"Do not list missing or unknown preferences. "
+                "Do not use Markdown, asterisks, headings, or bullet points. "
+                "Only include preferences the customer actually stated. "
+                "Do not list missing or unknown preferences. "
                 "Preserve exact budget limits and other constraints. "
                 "Do not invent details. "
                 "If no preferences are known, say so."
