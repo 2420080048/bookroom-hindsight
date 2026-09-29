@@ -1,4 +1,4 @@
-import os
+return f"bookroom-live-v1-customer-{int(customer_id)}"import os
 
 from hindsight_client import Hindsight
 
@@ -11,7 +11,7 @@ def get_memory_client():
 
 
 def customer_bank_id(customer_id):
-    return f"bookroom-customer-{int(customer_id)}"
+    return f"bookroom-live-v1-customer-{int(customer_id)}"
 
 
 def save_customer_memory(customer_id, text, event_id):
